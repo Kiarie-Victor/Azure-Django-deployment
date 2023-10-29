@@ -1,4 +1,4 @@
-from settings import *
+from project.settings import *
 import os
 
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
