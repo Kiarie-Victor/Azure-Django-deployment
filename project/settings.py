@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+from ms_identity_web.configuration import AADConfig
+from ms_identity_web import IdentityWebPython
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +29,10 @@ SECRET_KEY = 'gHlcL*ZHbRf6g94x0f4lDJn$&yhKBMiP$5bZ@F&VBdueFv8Usq'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+AADConfig =  AADConfig.parse_json(file_path='aad.config.json')
+MS_IDENTITY_WEB = IdentityWebPython(AADConfig)
+ERROR_TEMPLATE = 'auth/{}.html' #for rendering 401 or other errors from microsoft authentication middleware
 
 # Application definition
 
@@ -51,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'ms_identity_web.django.middleware.MsalMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -123,8 +130,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = [
+    os.path.join(BASE_DIR, 'static')
+]
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-import os
+
 if 'WEBSITE_HOSTNAME' in os.environ: # Running on Azure
     from .azure import *
