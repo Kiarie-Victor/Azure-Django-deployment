@@ -30,8 +30,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AADConfig =  AADConfig.parse_json(file_path='aad.config.json')
-MS_IDENTITY_WEB = IdentityWebPython(AADConfig)
+AAD_CONFIG =  AADConfig.parse_json(file_path='aad.config.json')
+MS_IDENTITY_WEB = IdentityWebPython(AAD_CONFIG)
 ERROR_TEMPLATE = 'auth/{}.html' #for rendering 401 or other errors from microsoft authentication middleware
 
 # Application definition
@@ -73,7 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'dog_shelters.context_processors.context'
+                'dog_shelters.context_processors.context',
             ],
         },
     },
